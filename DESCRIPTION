@@ -24,3 +24,5 @@ Imports:
     magrittr,
     rlang,
     here
+URL: https://github.com/KaiAragaki/pointr
+BugReports: https://github.com/KaiAragaki/pointr/issues
