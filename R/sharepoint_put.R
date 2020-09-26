@@ -94,19 +94,26 @@ sharepoint_put <- function(file, file_name = NULL, dest_path, token, overwrite =
                                                   http_verb = "PUT")
         }
 
+
+
         # Upload the filename which it was called from into source_code column
         script <- get_current_script()
-        if (identical(script, character(0))) {
-                message("Couldn't find the script name.\nIs the file 'untitled'?")
-        }
-        else {
-                url  <- paste0("https://graph.microsoft.com/v1.0/drives/", res$parentReference$driveId, "/items/", res$id, "/listitem/fields")
-                body <- jsonlite::toJSON(list(source_code = script), pretty = T, auto_unbox = T)
-                res <- AzureGraph::call_graph_url(token = token,
-                                                  url = url,
-                                                  body = body,
-                                                  encode = "raw",
-                                                  http_verb = "PATCH")
-        }
+        url  <- paste0("https://graph.microsoft.com/v1.0/drives/", res$parentReference$driveId, "/list/columns")
+        check_for_source_col(url)
+        # if (identical(script, character(0))) {
+        #         message("Couldn't find the script name.\nIs the file 'untitled'?")
+        # }
+        # else {
+        #         url  <- paste0("https://graph.microsoft.com/v1.0/drives/", res$parentReference$driveId, "/items/", res$id, "/listitem/fields")
+        #         print(url)
+        #         body <- jsonlite::toJSON(list(source_code = script), pretty = T, auto_unbox = T)
+        #         res <- AzureGraph::call_graph_url(token = token,
+        #                                           url = url,
+        #                                           body = body,
+        #                                           encode = "raw",
+        #                                           http_verb = "PATCH")
+        # }
+
+
 
 }
