@@ -101,12 +101,12 @@ sharepoint_put <- function(file, file_name = NULL, dest_path, token, overwrite =
         }
         else {
                 url  <- paste0("https://graph.microsoft.com/v1.0/drives/", res$parentReference$driveId, "/items/", res$id, "/listitem/fields")
-                body <- jsonlite::toJSON(list(source_code = script), pretty = T, auto_unbox = T)
+                body <- jsonlite::toJSON(list(test_col = script), pretty = T, auto_unbox = T)
                 res <- AzureGraph::call_graph_url(token = token,
                                                   url = url,
                                                   body = body,
                                                   encode = "raw",
-                                                  http_verb = "PATCH")
+                                                  http_verb = "PUT")
         }
 
 }
