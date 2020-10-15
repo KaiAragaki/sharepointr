@@ -17,7 +17,7 @@
 #
 #' See the 'working-with-sharepoint-files.Rmd vignette for more details
 
-sharepoint_put <- function(file, file_name = NULL, dest_path, token, overwrite = F) {
+sharepoint_put <- function(file, dest_path, token, overwrite = F, file_name = NULL) {
 
         base_url <- "https://graph.microsoft.com/v1.0/sites/"
 
@@ -70,7 +70,9 @@ sharepoint_put <- function(file, file_name = NULL, dest_path, token, overwrite =
                         tidyr::unnest_wider(col = .data$value) %>%
                         dplyr::mutate(name  = tolower(.data$name)) %>%
                         dplyr::filter(.data$name == tolower(file_name))
-                if (nrow(response) > 0) stop("\nFile already exists in destination. \nChange filename (case-INsensitive) or set overwrite to TRUE")
+                if (!is.null(nrow(response))) {
+                        if (nrow(response) > 0) stop("\nFile already exists in destination. \nChange filename (case-INsensitive) or set overwrite to TRUE")
+                }
         }
 
         # Upload file
@@ -81,8 +83,9 @@ sharepoint_put <- function(file, file_name = NULL, dest_path, token, overwrite =
                                                   body      = httr::upload_file(file),
                                                   encode    = mime::guess_type(ext_file_name),
                                                   http_verb = "PUT")
-        } else if (file.size(file) > 3900000) {
+        } else if (file.size(file) < 62500000) {
                 url <- paste0(base_url, sp_id, "/drive/items/", folder_id, ":/", file_name, ":/createUploadSession")
+                print(url)
                 res <- AzureGraph::call_graph_url(token,
                                                   url = url,
                                                   http_verb = "POST")
@@ -92,28 +95,27 @@ sharepoint_put <- function(file, file_name = NULL, dest_path, token, overwrite =
                                                   body      = httr::upload_file(file),
                                                   encode    = mime::guess_type(ext_file_name),
                                                   http_verb = "PUT")
+        } else {
+                stop("sharepoint_put (currently) only supports up to 60MB files")
         }
 
 
-
         # Upload the filename which it was called from into source_code column
-        script <- get_current_script()
+        # If no such column exists, do nothing
+
         url  <- paste0("https://graph.microsoft.com/v1.0/drives/", res$parentReference$driveId, "/list/columns")
-        check_for_source_col(url)
-        # if (identical(script, character(0))) {
-        #         message("Couldn't find the script name.\nIs the file 'untitled'?")
-        # }
-        # else {
-        #         url  <- paste0("https://graph.microsoft.com/v1.0/drives/", res$parentReference$driveId, "/items/", res$id, "/listitem/fields")
-        #         print(url)
-        #         body <- jsonlite::toJSON(list(source_code = script), pretty = T, auto_unbox = T)
-        #         res <- AzureGraph::call_graph_url(token = token,
-        #                                           url = url,
-        #                                           body = body,
-        #                                           encode = "raw",
-        #                                           http_verb = "PATCH")
-        # }
-
-
-
+        if (check_for_source_col(url)) {
+                script <- get_current_script()
+                if (identical(script, character(0))) {
+                        message("Couldn't find the script name.\nIs the file 'untitled'?")
+                } else {
+                        url  <- paste0("https://graph.microsoft.com/v1.0/drives/", res$parentReference$driveId, "/items/", res$id, "/listitem/fields")
+                        body <- jsonlite::toJSON(list(source_code = script), pretty = T, auto_unbox = T)
+                        res <- AzureGraph::call_graph_url(token = token,
+                                                          url = url,
+                                                          body = body,
+                                                          encode = "raw",
+                                                          http_verb = "PATCH")
+                }
+        }
 }
