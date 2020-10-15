@@ -26,3 +26,7 @@ Imports:
     here
 URL: https://github.com/KaiAragaki/pointr
 BugReports: https://github.com/KaiAragaki/pointr/issues
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
