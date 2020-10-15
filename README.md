@@ -1,4 +1,4 @@
-# pointr
+# pointr <img src='man/figures/logo.png' align="right" height="139" />
 Get and Push Files to SharePoint
 
 # Who is this for?
