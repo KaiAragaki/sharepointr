@@ -68,7 +68,8 @@ sharepoint_put <- function(file, dest_path, token, overwrite = F, file_name = NU
                                                    http_verb = "GET") %>%
                         dplyr::as_tibble() %>%
                         tidyr::unnest_wider(col = .data$value)
-                if(!is.null(response$name)) {
+                print(response)
+                if("name" %in% colnames(response)) {
                         response <- response %>%
                                 dplyr::mutate(name  = tolower(.data$name)) %>%
                                 dplyr::filter(.data$name == tolower(file_name))
