@@ -108,6 +108,7 @@ sharepoint_put <- function(file, dest_path, token, overwrite = F, file_name = NU
         url  <- paste0("https://graph.microsoft.com/v1.0/drives/", res$parentReference$driveId, "/list/columns")
         if (check_for_source_col(url, token)) {
                 script <- get_current_script()
+                print(script)
                 if (identical(script, character(0))) {
                         message("Couldn't find the script name.\nIs the file 'untitled'?")
                 } else {
