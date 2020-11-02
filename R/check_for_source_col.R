@@ -27,6 +27,5 @@ check_for_source_col <- function (url, token){
         } else {
                 res <- F
         }
-        print(res)
         res
 }

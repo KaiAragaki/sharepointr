@@ -68,7 +68,6 @@ sharepoint_put <- function(file, dest_path, token, overwrite = F, file_name = NU
                                                    http_verb = "GET") %>%
                         dplyr::as_tibble() %>%
                         tidyr::unnest_wider(col = .data$value)
-                print(response)
                 if("name" %in% colnames(response)) {
                         response <- response %>%
                                 dplyr::mutate(name  = tolower(.data$name)) %>%
@@ -87,7 +86,6 @@ sharepoint_put <- function(file, dest_path, token, overwrite = F, file_name = NU
                                                   http_verb = "PUT")
         } else if (file.size(file) < 62500000) {
                 url <- paste0(base_url, sp_id, "/drive/items/", folder_id, ":/", file_name, ":/createUploadSession")
-                print(url)
                 res <- AzureGraph::call_graph_url(token,
                                                   url = url,
                                                   http_verb = "POST")
@@ -108,7 +106,6 @@ sharepoint_put <- function(file, dest_path, token, overwrite = F, file_name = NU
         url  <- paste0("https://graph.microsoft.com/v1.0/drives/", res$parentReference$driveId, "/list/columns")
         if (check_for_source_col(url, token)) {
                 script <- get_current_script()
-                print(script)
                 if (identical(script, character(0))) {
                         message("Couldn't find the script name.\nIs the file 'untitled'?")
                 } else {
