@@ -67,10 +67,11 @@ sharepoint_put <- function(file, dest_path, token, overwrite = F, file_name = NU
                                                    url,
                                                    http_verb = "GET") %>%
                         dplyr::as_tibble() %>%
-                        tidyr::unnest_wider(col = .data$value) %>%
-                        dplyr::mutate(name  = tolower(.data$name)) %>%
-                        dplyr::filter(.data$name == tolower(file_name))
-                if (!is.null(nrow(response))) {
+                        tidyr::unnest_wider(col = .data$value)
+                if(!is.null(response$name)) {
+                        response <-
+                                dplyr::mutate(name  = tolower(.data$name)) %>%
+                                dplyr::filter(.data$name == tolower(file_name))
                         if (nrow(response) > 0) stop("\nFile already exists in destination. \nChange filename (case-INsensitive) or set overwrite to TRUE")
                 }
         }
