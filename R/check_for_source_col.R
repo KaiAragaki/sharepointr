@@ -12,6 +12,7 @@ check_for_source_col <- function (url, token){
                                           http_verb = "GET") %>%
                 dplyr::as_tibble() %>%
                 tidyr::unnest_wider(.data$value)
+        print(res)
         if ("source_code" %in% colnames(res)) {
                 if ("read_only" %in% colnames(res)){
                         res <- dplyr::filter(name == "source_code",
