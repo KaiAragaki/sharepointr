@@ -1,4 +1,4 @@
-Package: pointr
+Package: sharepointr
 Title: Get and Push Files to SharePoint
 Version: 0.1.0.0
 Authors@R: 
@@ -24,8 +24,8 @@ Imports:
     magrittr,
     rlang,
     here
-URL: https://github.com/KaiAragaki/pointr
-BugReports: https://github.com/KaiAragaki/pointr/issues
+URL: https://github.com/KaiAragaki/sharepointr
+BugReports: https://github.com/KaiAragaki/sharepointr/issues
 Suggests: 
     knitr,
     rmarkdown
