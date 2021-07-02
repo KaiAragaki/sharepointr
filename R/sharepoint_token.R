@@ -11,6 +11,5 @@
 #' }
 sharepoint_token <- function() {
         gr <- AzureGraph::create_graph_login()
-        me <- gr$get_user("me")
-        token <- me$token
+        gr$get_user()$token
 }
